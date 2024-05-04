@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkySage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button> <img src="https://illustoon.com/photo/7800.png"></button>
+        </div>
+        <div class="weather">
+            <img src="https://cdn.icon-icons.com/icons2/3192/PNG/512/sunny_sun_cloud_weather_cloudy_icon_194267.png" class="weather-icon">
+            <h1 class="temp"></h1>
+            <h2 class="city"></h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://static-00.iconduck.com/assets.00/humidity-icon-2048x1675-xxsge5os.png">
+                    <div>
+                        <p class="humidity"></p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/wind-speed-2295713-1939049.png?f=webp">
+                    <p class="wind"></p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apikey = "4f508021a52c6b698a5cb93e5aadea7f";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const searchbox = document.querySelector(".search input");
+        const searchbtn = document.querySelector(".search button");
+        const weathericon = document.querySelector(".weather-icon");
+
+        async function checkweather(city) {
+            const response = await fetch(apiUrl + city + `&appid=${apikey}`);
+            const data = await response.json();
+            console.log(data);
+
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = data.main.temp + "°C";
+            document.querySelector(".humidity").innerHTML = `${data.main.humidity}%`;
+            document.querySelector(".wind").innerHTML = `${data.wind.speed} km/h`;
+
+            const weatherCode = data.weather[0].id;
+
+            if (weatherCode >= 200 && weatherCode < 300) { // Thunderstorm
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/024/984/155/original/3d-weather-forecast-icons-thunderstorms-and-whirlwinds-stormy-weather-3d-illustration-png.png";
+            } else if (weatherCode >= 300 && weatherCode < 400) { // Drizzle
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/024/825/193/original/3d-weather-icon-day-with-rain-free-png.png";
+            } else if (weatherCode >= 500 && weatherCode < 600) { // Rain
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/022/030/103/original/3d-weather-icon-of-rain-white-cloud-with-blue-rain-drops-on-it-rain-cloud-with-water-drops-png.png";
+            } else if (weatherCode >= 600 && weatherCode < 700) { // Snow
+                weathericon.src = "https://static.vecteezy.com/system/resources/thumbnails/024/984/026/small_2x/3d-weather-forecast-icons-snowy-winter-clouds-cold-weather-3d-illustration-png.png";
+            } else if (weatherCode >= 700 && weatherCode < 800) { // Atmosphere
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/024/825/155/original/3d-weather-icon-sun-and-wind-free-png.png";
+            } else if (weatherCode === 800) { // Clear
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/024/825/155/original/3d-weather-icon-sun-and-wind-free-png.png";
+            } else if (weatherCode >= 801 && weatherCode < 900) { // Clouds
+                weathericon.src = "https://static.vecteezy.com/system/resources/previews/020/716/723/original/3d-minimal-weather-forecast-concept-partly-cloudy-in-the-morning-weather-icon-3d-illustration-png.png";
+            }
+        }
+
+        searchbtn.addEventListener("click", () => {
+            const city = searchbox.value;
+            checkweather(city);
+        });
+
+    </script> 
+</body>
+</html>
+
+
